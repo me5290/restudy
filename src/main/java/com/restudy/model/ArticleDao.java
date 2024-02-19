@@ -87,4 +87,56 @@ public class ArticleDao {
         }
         return null;
     }
+
+    public ArticleDto edit(Long id){
+        try {
+            String sql = "select * from article where id = ?";
+            ps = conn.prepareStatement(sql);
+            ps.setLong(1,id);
+            rs = ps.executeQuery();
+            if(rs.next()){
+                return new ArticleDto(
+                        rs.getLong(1),
+                        rs.getString(2),
+                        rs.getString(3)
+                );
+            }
+        }catch (Exception e){
+            System.out.println(e);
+        }
+        return null;
+    }
+
+    public ArticleDto update(ArticleDto articleDto){
+        try {
+            String sql = "update article set title = ? , content = ? where id = ?";
+            ps = conn.prepareStatement(sql);
+            ps.setString(1,articleDto.getTitle());
+            ps.setString(2,articleDto.getTitle());
+            ps.setLong(3,articleDto.getId());
+            int count = ps.executeUpdate();
+            if(count == 1){
+                System.out.println("articleDto"+articleDto);
+                return articleDto;
+            }
+        }catch (Exception e){
+            System.out.println(e);
+        }
+        return null;
+    }
+
+    public Boolean delete(Long id){
+        try {
+            String sql = "delete from article where id = ?";
+            ps = conn.prepareStatement(sql);
+            ps.setLong(1,id);
+            int count = ps.executeUpdate();
+            if(count == 1){
+                return true;
+            }
+        }catch (Exception e){
+            System.out.println(e);
+        }
+        return false;
+    }
 }
